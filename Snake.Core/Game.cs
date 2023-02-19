@@ -22,7 +22,7 @@ public class Game
         {
             for (var j = 0; j < BoardW; j++)
             {
-                if(includeFood && Board[i,j]==PixelType.Food)continue;
+                if (includeFood && Board[i, j] == PixelType.Food) continue;
                 
                 Board[i, j] = PixelType.Empty;
             }
@@ -56,6 +56,7 @@ public class Game
     public void Move(int moveStep)
     {
         MoveAllBodyPartToNextPartPos();
+        var isFoodExist = IsFoodExist(out Position foodPos);
         switch (_direction)
         {
             case Direction.Right:
@@ -64,13 +65,16 @@ public class Game
             case Direction.Left:
                 _snake[0].ChangeXBy(-moveStep);
                 break;
-            case Direction.Bottom:
+            case Direction.Down:
                 _snake[0].ChangeYBy(moveStep);
                 break;
-            case Direction.Top:
+            case Direction.Up:
                 _snake[0].ChangeYBy(-moveStep);
                 break;
         }
+        
+        if(isFoodExist && _snake[0] == foodPos) GrowSnakeBy(1);
+        
         ProjectSnakePosOnBoard();
     }
 
@@ -84,7 +88,7 @@ public class Game
 
     public Position GenerateFood(IPosGenerator posGenerator)
     {
-        var foodPos = posGenerator.Generate(0, BoardW);
+        var foodPos = posGenerator.Generate(1, BoardW-1);
 
         if (IsOverSnake(foodPos))
             foodPos = GenerateFood(posGenerator);
@@ -134,16 +138,21 @@ public class Game
         ProjectSnakePosOnBoard();
     }
 
-    public bool IsFoodExist()
+    public bool IsFoodExist(out Position foodPos)
     {
         for (var i = 0; i < BoardL; i++)
         {
             for (var j = 0; j < BoardW; j++)
             {
-                if (Board[i, j] == PixelType.Food) return true;
+                if (Board[i, j] == PixelType.Food)
+                {
+                    foodPos = new Position(i, j);
+                    return true;
+                }
             }
         }
 
+        foodPos = new Position(0, 0);
         return false;
     }
 }

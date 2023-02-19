@@ -3,14 +3,31 @@ using Snake.Core;
 
 var game = new Game();
 game.Start();
-game.SetDirection(Direction.Bottom);
+
+Task.Run(() =>
+{
+    while (true)
+    {
+        var key = Console.ReadKey();
+        if(key.Key == ConsoleKey.RightArrow)
+            game.SetDirection(Direction.Right);
+        else if(key.Key == ConsoleKey.LeftArrow)
+            game.SetDirection(Direction.Left);
+        else if(key.Key == ConsoleKey.UpArrow)
+            game.SetDirection(Direction.Up);
+        else if(key.Key == ConsoleKey.DownArrow)
+            game.SetDirection(Direction.Down);
+        else if(key.Key == ConsoleKey.Spacebar)
+            game.GrowSnakeBy(1);
+    }
+});
 
 while (true)
 {
-    if(!game.IsFoodExist())
+    if(!game.IsFoodExist(out Position foodPos))
         game.GenerateFood(new PosGenerator());
     PrintBoard(game);
-    Thread.Sleep(TimeSpan.FromSeconds(1));
+    Thread.Sleep(200);
     game.Move(1);
 }
 
@@ -21,9 +38,9 @@ void PrintBoard(Game game)
     {
         for (var j = 0; j < game.BoardW; j++)
         {
-            if(game.Board[i,j] == PixelType.Body)
+            if(game.Board[j,i] == PixelType.Body)
                 Console.Write("🔵");
-            else if(game.Board[i,j]== PixelType.Food)
+            else if(game.Board[j,i]== PixelType.Food)
                 Console.Write("🐸");
             else
                 Console.Write("⬜");

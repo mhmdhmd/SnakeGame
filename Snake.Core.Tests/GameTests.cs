@@ -45,7 +45,7 @@ public class GameTests
         var actualPosition = game.Snake[0];
         Assert.That(actualPosition, Is.EqualTo(expectedPosition));
         
-        game.SetDirection(Direction.Bottom);
+        game.SetDirection(Direction.Down);
         lastPosition = game.Snake[0];
         game.Move(moveStep);
         expectedPosition = new Position(lastPosition.X, lastPosition.Y + 1);
@@ -59,7 +59,7 @@ public class GameTests
         actualPosition = game.Snake[0];
         Assert.That(actualPosition, Is.EqualTo(expectedPosition));
         
-        game.SetDirection(Direction.Top);
+        game.SetDirection(Direction.Up);
         lastPosition = game.Snake[0];
         game.Move(moveStep);
         expectedPosition = new Position(lastPosition.X, lastPosition.Y-1);
@@ -97,17 +97,17 @@ public class GameTests
         
         game.SetDirection(Direction.Right);
         game.Move(10);
-        game.SetDirection( Direction.Bottom);
+        game.SetDirection( Direction.Down);
         game.Move(10);
 
         var snakeHeadPos = game.Snake[0];
         Assert.That(snakeHeadPos, Is.EqualTo(actualFoodPos));
+        Assert.That(game.Snake.Length, Is.EqualTo(2));
 
         game.RemoveFood(foodPos);
         Assert.That(game.GetBoardPixelAt(actualFoodPos), Is.EqualTo(PixelType.Empty));
         
-        game.GrowSnakeBy(1);
-        Assert.That(game.Snake.Length, Is.EqualTo(2));
+        //game.GrowSnakeBy(1);
         Assert.That(game.Snake[1], Is.EqualTo(new Position(9,10)));
     }
 
@@ -121,7 +121,7 @@ public class GameTests
         game.Move(10);
         game.GrowSnakeBy(5);
 
-        game.SetDirection( Direction.Bottom);
+        game.SetDirection( Direction.Down);
         game.Move(1);
         Assert.That(game.Snake[0], Is.EqualTo(new Position(10,1)));
         Assert.That(game.Snake[1], Is.EqualTo(new Position(10,0)));
@@ -143,7 +143,7 @@ public class GameTests
         Assert.That(game.Snake[1], Is.EqualTo(new Position(9,2)));
         Assert.That(game.Snake[2], Is.EqualTo(new Position(10,2)));
         
-        game.SetDirection(Direction.Bottom);
+        game.SetDirection(Direction.Down);
         game.Move(1);
         Assert.That(game.Snake[0], Is.EqualTo(new Position(8,3)));
         Assert.That(game.Snake[1], Is.EqualTo(new Position(8,2)));
@@ -165,7 +165,7 @@ public class GameTests
         posOfSnake = game.GetBoardPixelAt(game.Snake[2]);
         Assert.That(posOfSnake, Is.EqualTo(PixelType.Body));
         
-        game.SetDirection( Direction.Bottom);
+        game.SetDirection( Direction.Down);
         game.Move(1);
         posOfSnake = game.GetBoardPixelAt(game.Snake[0]);
         Assert.That(posOfSnake, Is.EqualTo(PixelType.Body));
@@ -194,11 +194,11 @@ public class GameTests
         var game = new Game();
         game.Start();
 
-        bool isFoodExistOnBoard = game.IsFoodExist();
+        bool isFoodExistOnBoard = game.IsFoodExist(out Position foodPos1);
         Assert.IsFalse(isFoodExistOnBoard);
 
         game.GenerateFood(new PosGenerator());
-        isFoodExistOnBoard = game.IsFoodExist();
+        isFoodExistOnBoard = game.IsFoodExist(out Position foodPos2);
         Assert.IsTrue(isFoodExistOnBoard);
     }
 }
