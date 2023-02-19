@@ -101,10 +101,10 @@ public class GameTests
         game.Move(10);
 
         var snakeHeadPos = game.Snake[0];
-        Assert.That(snakeHeadPos, Is.EqualTo(foodPos));
+        Assert.That(snakeHeadPos, Is.EqualTo(actualFoodPos));
 
         game.RemoveFood(foodPos);
-        Assert.That(game.GetBoardPixelAt(foodPos), Is.EqualTo(PixelType.Empty));
+        Assert.That(game.GetBoardPixelAt(actualFoodPos), Is.EqualTo(PixelType.Empty));
         
         game.GrowSnakeBy(1);
         Assert.That(game.Snake.Length, Is.EqualTo(2));
@@ -112,7 +112,7 @@ public class GameTests
     }
 
     [Test]
-    public void Game_MoveSnake_GrowIt_CheckForMovment()
+    public void Game_MoveSnake_GrowIt_CheckForMovement()
     {
         var game = new Game();
         game.Start();
@@ -148,5 +148,57 @@ public class GameTests
         Assert.That(game.Snake[0], Is.EqualTo(new Position(8,3)));
         Assert.That(game.Snake[1], Is.EqualTo(new Position(8,2)));
         Assert.That(game.Snake[2], Is.EqualTo(new Position(9,2)));
+    }
+
+    [Test]
+    public void Game_MoveSnake_BoardTrackSnakePos()
+    {
+        var game = new Game();
+        game.Start();
+
+        PixelType posOfSnake = game.GetBoardPixelAt(game.Snake[0]);
+        Assert.That(posOfSnake, Is.EqualTo(PixelType.Body));
+        
+        game.SetDirection(Direction.Right);
+        game.Move(10);
+        game.GrowSnakeBy(5);
+        posOfSnake = game.GetBoardPixelAt(game.Snake[2]);
+        Assert.That(posOfSnake, Is.EqualTo(PixelType.Body));
+        
+        game.SetDirection( Direction.Bottom);
+        game.Move(1);
+        posOfSnake = game.GetBoardPixelAt(game.Snake[0]);
+        Assert.That(posOfSnake, Is.EqualTo(PixelType.Body));
+    }
+
+    [Test]
+    public void Game_GenerateFoodAndEmptyBoard_FoodShouldNotDisappear()
+    {
+        var game = new Game();
+        game.Start();
+
+        IPosGenerator posGenerator = Substitute.For<IPosGenerator>();
+        var expectedFoodPos = new Position(10, 10);
+        posGenerator.Generate(Arg.Any<int>(), Arg.Any<int>()).ReturnsForAnyArgs(expectedFoodPos);
+        Position actualFoodPos = game.GenerateFood(posGenerator);
+        Assert.That(actualFoodPos, Is.EqualTo(expectedFoodPos));
+
+        game.ProjectSnakePosOnBoard();
+        PixelType foodPosPixelType = game.GetBoardPixelAt(actualFoodPos);
+        Assert.That(foodPosPixelType, Is.EqualTo(PixelType.Food));
+    }
+
+    [Test]
+    public void Game_FoodExist_ReturnTrue()
+    {
+        var game = new Game();
+        game.Start();
+
+        bool isFoodExistOnBoard = game.IsFoodExist();
+        Assert.IsFalse(isFoodExistOnBoard);
+
+        game.GenerateFood(new PosGenerator());
+        isFoodExistOnBoard = game.IsFoodExist();
+        Assert.IsTrue(isFoodExistOnBoard);
     }
 }

@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Snake.Core.Tests", "Snake.C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Snake.Core", "Snake.Core\Snake.Core.csproj", "{A88E455C-D125-4FED-8B08-2F02E7BE5924}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Snake", "Snake\Snake.csproj", "{8EE07AAF-A2EF-4A81-A5E7-3CB31F36B4ED}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{A88E455C-D125-4FED-8B08-2F02E7BE5924}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A88E455C-D125-4FED-8B08-2F02E7BE5924}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A88E455C-D125-4FED-8B08-2F02E7BE5924}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8EE07AAF-A2EF-4A81-A5E7-3CB31F36B4ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8EE07AAF-A2EF-4A81-A5E7-3CB31F36B4ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8EE07AAF-A2EF-4A81-A5E7-3CB31F36B4ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8EE07AAF-A2EF-4A81-A5E7-3CB31F36B4ED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

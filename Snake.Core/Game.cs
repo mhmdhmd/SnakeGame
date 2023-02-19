@@ -2,27 +2,29 @@ namespace Snake.Core;
 
 public class Game
 {
-    private PixelType[,] _board;
+    public PixelType[,] Board { get; }
     private Position[] _snake;
     private Direction _direction;
-    private const int BoardL = 20;
-    private const int BoardW = 20;
+    public int BoardL => 20;
+    public int BoardW => 20;
 
     public Game()
     {
-        _board = new PixelType[BoardL, BoardW];
+        Board = new PixelType[BoardL, BoardW];
         Initial();
     }
 
     public Position[] Snake => _snake;
 
-    public bool Initial()
+    public bool Initial(bool includeFood = false)
     {
         for (var i = 0; i < BoardL; i++)
         {
             for (var j = 0; j < BoardW; j++)
             {
-                _board[i, j] = PixelType.Empty;
+                if(includeFood && Board[i,j]==PixelType.Food)continue;
+                
+                Board[i, j] = PixelType.Empty;
             }
         }
 
@@ -33,6 +35,17 @@ public class Game
     {
         _snake = new Position[1];
         _snake[0] = new Position(0, 0);
+
+        ProjectSnakePosOnBoard();
+    }
+
+    public void ProjectSnakePosOnBoard()
+    {
+        Initial(true);
+        foreach (var snakePos in _snake)
+        {
+            Board[snakePos.X, snakePos.Y] = PixelType.Body;
+        }
     }
 
     public void SetDirection(Direction dir)
@@ -58,6 +71,7 @@ public class Game
                 _snake[0].ChangeYBy(-moveStep);
                 break;
         }
+        ProjectSnakePosOnBoard();
     }
 
     private void MoveAllBodyPartToNextPartPos()
@@ -70,12 +84,12 @@ public class Game
 
     public Position GenerateFood(IPosGenerator posGenerator)
     {
-        var foodPos = posGenerator.Generate(BoardL, BoardW);
+        var foodPos = posGenerator.Generate(0, BoardW);
 
         if (IsOverSnake(foodPos))
             foodPos = GenerateFood(posGenerator);
 
-        _board[foodPos.X, foodPos.Y] = PixelType.Food;
+        Board[foodPos.X, foodPos.Y] = PixelType.Food;
         return foodPos;
     }
 
@@ -92,12 +106,12 @@ public class Game
 
     public PixelType GetBoardPixelAt(Position pos)
     {
-        return _board[pos.X, pos.Y];
+        return Board[pos.X, pos.Y];
     }
 
     public void RemoveFood(Position foodPos)
     {
-        _board[foodPos.X, foodPos.Y] = PixelType.Empty;
+        Board[foodPos.X, foodPos.Y] = PixelType.Empty;
     }
 
     public void GrowSnakeBy(int count)
@@ -116,5 +130,20 @@ public class Game
             _snake[i + 1].SetX(_snake[i].X - 1);
             _snake[i + 1].SetY(_snake[i].Y);
         }
+        
+        ProjectSnakePosOnBoard();
+    }
+
+    public bool IsFoodExist()
+    {
+        for (var i = 0; i < BoardL; i++)
+        {
+            for (var j = 0; j < BoardW; j++)
+            {
+                if (Board[i, j] == PixelType.Food) return true;
+            }
+        }
+
+        return false;
     }
 }
