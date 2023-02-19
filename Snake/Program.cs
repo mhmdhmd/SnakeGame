@@ -41,7 +41,7 @@ void PrintBoard(Game game)
             if(game.Board[j,i] == PixelType.Body)
                 Console.Write("🔵");
             else if(game.Board[j,i]== PixelType.Food)
-                Console.Write("🐸");
+                Console.Write("🐁");
             else
                 Console.Write("⬜");
         }

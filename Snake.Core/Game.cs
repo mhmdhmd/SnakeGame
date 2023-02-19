@@ -134,7 +134,8 @@ public class Game
             _snake[i + 1].SetX(_snake[i].X - 1);
             _snake[i + 1].SetY(_snake[i].Y);
         }
-        
+
+
         ProjectSnakePosOnBoard();
     }
 
